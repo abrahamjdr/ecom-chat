@@ -242,3 +242,83 @@ html,
 body {
   overscroll-behavior-x: contain;
 }
+/* Botón flotante */
+.fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 70;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Overlay + hoja de chat */
+.chat-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, 0.35);
+}
+.chat-sheet {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 75;
+  width: min(420px, 92vw);
+  height: min(70vh, 560px);
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.chat-body {
+  flex: 1;
+  overflow: auto;
+  padding: 10px 12px;
+}
+.chat-row {
+  margin: 6px 0;
+}
+.chat-bubble {
+  display: inline-block;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.chat-bubble.me {
+  background: var(--accent-600);
+  border: 0;
+  color: #fff;
+}
+.chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+}
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}

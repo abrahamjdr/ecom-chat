@@ -1,34 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import ProductList from "./components/products/ProductList";
 import ProductDetail from "./components/products/ProductDetail";
 import CartDrawer from "./components/cart/CartDrawer";
 import ThemeControls from "./components/ui/ThemeControls";
-import useSwipe from "./gestures/useSwipe";
-import { Capacitor } from "@capacitor/core";
+import ChatPanel from "./components/chat/Chat";
 
 export default function App() {
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
-
-  const allowLeftEdge = useMemo(() => {
-    const isNative = Capacitor?.isNativePlatform?.() === true;
-    const isIOSStandalone =
-      typeof navigator !== "undefined" &&
-      "standalone" in navigator &&
-      navigator.standalone === true;
-    return isNative || isIOSStandalone; // Capacitor o PWA "Add to Home Screen"
-  }, []);
-
-  useSwipe({
-    onLeftFromRightEdge: () => setCartOpen(true), // → abre carrito
-    onLeft: () => setCartOpen(false), // ← cierra carrito
-    onRightFromLeftEdge:
-      allowLeftEdge && selected ? () => setSelected(null) : undefined, // ← volver desde detalle
-    minDX: 60,
-    maxDY: 60,
-    leftEdge: 28,
-    rightEdge: 28,
-  });
+  const [chatOpen, setChatOpen] = useState(false);
 
   return (
     <div className="page">
@@ -48,6 +28,7 @@ export default function App() {
       </header>
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <ChatPanel open={chatOpen} onClose={() => setChatOpen(false)} />
 
       <main>
         {!selected && <ProductList onSelectProduct={setSelected} />}
@@ -59,6 +40,11 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* FAB de chat */}
+      <button className="fab" onClick={() => setChatOpen(true)} title="Chat">
+        💬
+      </button>
     </div>
   );
 }

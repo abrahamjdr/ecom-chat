@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { loadChat, saveChat } from "../../store/chatStore";
+import { Preferences } from "@capacitor/preferences";
 
-export default function Chat({ onBack }) {
+const KEY = "chat_history";
+
+export default function ChatPanel({ open, onClose }) {
   const [messages, setMessages] = useState([
     { sender: "bot", text: "¡Hola! ¿En qué puedo ayudarte?" },
   ]);
@@ -10,73 +12,79 @@ export default function Chat({ onBack }) {
 
   useEffect(() => {
     (async () => {
-      const cached = await loadChat();
-      if (cached.length) setMessages(cached);
+      const { value } = await Preferences.get({ key: KEY });
+      if (value) setMessages(JSON.parse(value));
     })();
   }, []);
 
   useEffect(() => {
+    Preferences.set({ key: KEY, value: JSON.stringify(messages) });
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-    saveChat(messages);
   }, [messages]);
 
   const send = () => {
     if (!draft.trim()) return;
-    setMessages((m) => [...m, { sender: "user", text: draft }]);
+    const userMsg = { sender: "user", text: draft };
     setDraft("");
+    setMessages((m) => [...m, userMsg]);
     setTimeout(() => {
       setMessages((m) => [
         ...m,
-        { sender: "bot", text: "Gracias, en breve te respondemos." },
+        { sender: "bot", text: "Gracias, ¡en breve te respondemos!" },
       ]);
-    }, 900);
+    }, 600);
   };
 
+  if (!open) return null;
+
   return (
-    <div style={{ padding: 8 }}>
-      <h2>Chat de soporte</h2>
-      <div
-        style={{
-          maxHeight: 320,
-          overflowY: "auto",
-          border: "1px solid #ddd",
-          padding: 8,
-        }}
+    <>
+      <div className="chat-overlay" onClick={onClose} />
+      <section
+        className="chat-sheet"
+        role="dialog"
+        aria-label="Chat de soporte"
       >
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            style={{
-              textAlign: msg.sender === "user" ? "right" : "left",
-              margin: "6px 0",
-            }}
+        <div className="chat-header">
+          <strong>Soporte</strong>
+          <button
+            className="btn-ghost"
+            style={{ marginLeft: "auto" }}
+            onClick={onClose}
           >
-            <span
-              style={{
-                display: "inline-block",
-                padding: "6px 10px",
-                borderRadius: 12,
-                background: msg.sender === "user" ? "#dcf8c6" : "#eee",
-              }}
+            ✕
+          </button>
+        </div>
+
+        <div className="chat-body">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className="chat-row"
+              style={{ textAlign: msg.sender === "user" ? "right" : "left" }}
             >
-              {msg.text}
-            </span>
-          </div>
-        ))}
-        <div ref={endRef} />
-      </div>
-      <div style={{ marginTop: 8 }}>
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          placeholder="Escribe…"
-          style={{ width: "75%" }}
-        />
-        <button onClick={send}>Enviar</button>
-      </div>
-      <button onClick={onBack} style={{ marginTop: 8 }}>
-        ← Volver
-      </button>
-    </div>
+              <span
+                className={`chat-bubble ${msg.sender === "user" ? "me" : ""}`}
+              >
+                {msg.text}
+              </span>
+            </div>
+          ))}
+          <div ref={endRef} />
+        </div>
+
+        <div className="chat-input">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
+            placeholder="Escribe un mensaje…"
+          />
+          <button className="btn" onClick={send}>
+            Enviar
+          </button>
+        </div>
+      </section>
+    </>
   );
 }
