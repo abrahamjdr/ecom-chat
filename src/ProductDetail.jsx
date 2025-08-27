@@ -1,4 +1,13 @@
-export default function ProductDetail({ product, onBack, onAddToCart }) {
+import { useCart } from "./cart/context";
+
+export default function ProductDetail({ product, onBack, onAdded }) {
+  const { add } = useCart();
+
+  const handleAdd = () => {
+    add(product);
+    onAdded?.(); // abre el drawer si te lo pasan por props
+  };
+
   return (
     <div>
       <button onClick={onBack}>← Volver</button>
@@ -11,7 +20,7 @@ export default function ProductDetail({ product, onBack, onAddToCart }) {
       <p>
         <strong>${product.price}</strong>
       </p>
-      <button onClick={() => onAddToCart(product)}>Añadir al carrito</button>
+      <button onClick={handleAdd}>Añadir al carrito</button>
     </div>
   );
 }
