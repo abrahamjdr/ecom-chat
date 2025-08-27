@@ -235,3 +235,10 @@ body {
 .cart-controls button {
   padding: 4px 8px;
 }
+.page {
+  touch-action: pan-y;
+}
+html,
+body {
+  overscroll-behavior-x: contain;
+}

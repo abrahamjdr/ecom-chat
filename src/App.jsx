@@ -1,12 +1,34 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ProductList from "./components/products/ProductList";
 import ProductDetail from "./components/products/ProductDetail";
 import CartDrawer from "./components/cart/CartDrawer";
 import ThemeControls from "./components/ui/ThemeControls";
+import useSwipe from "./gestures/useSwipe";
+import { Capacitor } from "@capacitor/core";
 
 export default function App() {
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
+
+  const allowLeftEdge = useMemo(() => {
+    const isNative = Capacitor?.isNativePlatform?.() === true;
+    const isIOSStandalone =
+      typeof navigator !== "undefined" &&
+      "standalone" in navigator &&
+      navigator.standalone === true;
+    return isNative || isIOSStandalone; // Capacitor o PWA "Add to Home Screen"
+  }, []);
+
+  useSwipe({
+    onLeftFromRightEdge: () => setCartOpen(true), // → abre carrito
+    onLeft: () => setCartOpen(false), // ← cierra carrito
+    onRightFromLeftEdge:
+      allowLeftEdge && selected ? () => setSelected(null) : undefined, // ← volver desde detalle
+    minDX: 60,
+    maxDY: 60,
+    leftEdge: 28,
+    rightEdge: 28,
+  });
 
   return (
     <div className="page">
@@ -17,7 +39,6 @@ export default function App() {
         >
           <h1 style={{ margin: 0 }}>EcomChat</h1>
           <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-            {/** opcional: controles de tema/colores **/}
             <ThemeControls />
             <button className="btn" onClick={() => setCartOpen(true)}>
               🛒
