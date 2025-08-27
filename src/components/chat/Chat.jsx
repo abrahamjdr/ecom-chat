@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { loadChat, saveChat } from "./chatStore";
+import { loadChat, saveChat } from "../../store/chatStore";
 
 export default function Chat({ onBack }) {
   const [messages, setMessages] = useState([

@@ -1,4 +1,4 @@
-import { useCart } from "./cart/context";
+import { useCart } from "../../cart/context";
 
 export default function CartDrawer({ open, onClose }) {
   const { items, subtotal, add, removeOne, removeAll, clear } = useCart();

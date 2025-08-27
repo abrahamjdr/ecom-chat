@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { Preferences } from "@capacitor/preferences";
-import { CartContext } from "./cart/context"; // ← importamos del paso 1
+import { CartContext } from "../../cart/context"; // ← importamos del paso 1
 
 const STORAGE_KEY = "cart_items_v1";
 

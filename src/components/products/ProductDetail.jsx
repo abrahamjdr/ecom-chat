@@ -1,4 +1,4 @@
-import { useCart } from "./cart/context";
+import { useCart } from "../../cart/context";
 
 export default function ProductDetail({ product, onBack, onAdded }) {
   const { add } = useCart();
