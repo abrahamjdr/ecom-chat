@@ -4,61 +4,68 @@ export default function CartDrawer({ open, onClose }) {
   const { items, subtotal, add, removeOne, removeAll, clear } = useCart();
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        right: open ? 0 : -460,
-        width: 360,
-        height: "100dvh",
-        background: "var(--card)",
-        color: "var(--text)",
-        transition: "right .25s",
-        padding: 16,
-        zIndex: 50,
-      }}
-    >
-      <button
-        onClick={onClose}
-        style={{ position: "absolute", right: 12, top: 12 }}
+    <aside className={`cart-drawer ${open ? "open" : ""}`}>
+      {/* header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: 12,
+          borderBottom: "1px solid var(--border)",
+        }}
       >
-        ✕
-      </button>
-      <h3>Tu carrito</h3>
+        <h3 style={{ margin: 0, flex: 1 }}>Tu carrito</h3>
+        <button className="btn-ghost" onClick={onClose}>
+          ✕
+        </button>
+      </div>
 
-      {items.length === 0 && <p>Vacío</p>}
+      {/* body */}
+      <div className="cart-body">
+        {items.length === 0 && <p>Vacío.</p>}
 
-      {items.map((i) => (
+        {items.map((i) => (
+          <div key={i.id} className="cart-item">
+            <img src={i.image} alt={i.title} />
+            <div style={{ flex: 1 }}>
+              <div className="cart-title">{i.title}</div>
+              <small>
+                ${i.price} × {i.qty}
+              </small>
+            </div>
+            <div className="cart-controls" style={{ display: "flex", gap: 6 }}>
+              <button className="btn-ghost" onClick={() => removeOne(i)}>
+                -
+              </button>
+              <button className="btn-ghost" onClick={() => add(i)}>
+                +
+              </button>
+              <button className="btn-ghost" onClick={() => removeAll(i)}>
+                🗑
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* acciones abajo */}
+      <div className="cart-actions">
         <div
-          key={i.id}
           style={{
             display: "flex",
-            gap: 8,
-            alignItems: "center",
-            margin: "8px 0",
+            justifyContent: "space-between",
+            marginBottom: 6,
           }}
         >
-          <img src={i.image} width="40" height="40" />
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{i.title}</div>
-            <small>
-              ${i.price} × {i.qty}
-            </small>
-          </div>
-          <button onClick={() => removeOne(i)}>-</button>
-          <button onClick={() => add(i)}>+</button>
-          <button onClick={() => removeAll(i)}>🗑</button>
+          <strong>Subtotal</strong>
+          <strong>${subtotal.toFixed(2)}</strong>
         </div>
-      ))}
-
-      <hr />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <strong>Subtotal</strong> <strong>${subtotal.toFixed(2)}</strong>
+        <button className="btn-ghost" onClick={clear}>
+          Vaciar
+        </button>
+        <button className="btn">Pagar (demo)</button>
       </div>
-      <button onClick={clear} style={{ marginTop: 8, width: "100%" }}>
-        Vaciar
-      </button>
-      <button style={{ marginTop: 8, width: "100%" }}>Pagar (demo)</button>
-    </div>
+    </aside>
   );
 }

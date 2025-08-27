@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
 
 export default function ProductList({ onSelectProduct }) {
   const [items, setItems] = useState([]);
@@ -10,28 +11,20 @@ export default function ProductList({ onSelectProduct }) {
       .catch((e) => console.error("Productos:", e));
   }, []);
 
-  if (!items.length) return <p>Cargando productos…</p>;
+  if (!items.length)
+    return (
+      <div className="container">
+        <p>Cargando productos…</p>
+      </div>
+    );
 
   return (
-    <ul style={{ listStyle: "none", padding: 0 }}>
-      {items.map((p) => (
-        <li
-          key={p.id}
-          onClick={() => onSelectProduct(p)}
-          style={{
-            display: "flex",
-            gap: 12,
-            cursor: "pointer",
-            margin: "8px 0",
-          }}
-        >
-          <img src={p.image} alt={p.title} width="48" height="48" />
-          <div>
-            <strong>{p.title}</strong>
-            <div>${p.price}</div>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div className="container" style={{ paddingTop: 16 }}>
+      <div className="grid">
+        {items.map((p) => (
+          <ProductCard key={p.id} product={p} onSelect={onSelectProduct} />
+        ))}
+      </div>
+    </div>
   );
 }
