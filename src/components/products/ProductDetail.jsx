@@ -1,11 +1,29 @@
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { useCart } from "../../cart/context";
+import { notifyAdded } from "../../native/notify";
+import { Capacitor } from "@capacitor/core";
 
 export default function ProductDetail({ product, onBack, onAdded }) {
   const { add } = useCart();
 
-  const addAndOpen = () => {
+  const addAndOpen = async () => {
     add(product);
-    onAdded?.();
+
+    // Solo intenta plugins en nativo (Capacitor) para evitar errores en web
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await Haptics.impact({ style: ImpactStyle.Medium });
+      } catch {
+        console.error("Error occurred while triggering haptic feedback");
+      }
+      try {
+        await notifyAdded(product.title);
+      } catch {
+        console.error("Error occurred while scheduling notification");
+      }
+    }
+
+    onAdded?.(); // abre el drawer del carrito
   };
 
   return (

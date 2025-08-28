@@ -9,12 +9,18 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "cap:sync": "cap sync",
+    "cap:run:android": "cap run android",
     "cap:open:android": "cap open android",
     "cap:open:ios": "cap open ios"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.3",
+    "@capacitor/filesystem": "^7.1.4",
+    "@capacitor/haptics": "^7.0.2",
+    "@capacitor/local-notifications": "^7.0.2",
     "@capacitor/preferences": "^7.0.2",
+    "@capacitor/share": "^7.0.2",
+    "@capacitor/status-bar": "^7.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

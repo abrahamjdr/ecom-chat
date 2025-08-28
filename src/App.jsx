@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
+import { StatusBar, Style } from "@capacitor/status-bar";
 import ProductList from "./components/products/ProductList";
 import ProductDetail from "./components/products/ProductDetail";
 import CartDrawer from "./components/cart/CartDrawer";
@@ -9,7 +11,13 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    StatusBar.setStyle({ style: Style.Default });
+    // Opcional:
+    // await StatusBar.setOverlaysWebView({ overlay:false });
+    // await StatusBar.setBackgroundColor({ color:'#064e3b' });
+  }, []);
   return (
     <div className="page">
       <header className="nav">
